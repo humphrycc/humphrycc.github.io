@@ -4,14 +4,19 @@
   <meta charset="utf-8">
   
   
-  <title>HUCHI</title>
+  <title>What&#39;s this extern &#34;C&#34; thing? | HUCHI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="HUCHI">
-<meta property="og:url" content="https://humphrycc.github.io/index.html">
+  <meta name="description" content="What’s this extern “C” thing?  Most C++ compilers do something called name decoration, or name mangling. In short, in order to support C++ function overloading, and C++ type-safe linkage, most C++ co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What&#39;s this extern &quot;C&quot; thing?">
+<meta property="og:url" content="https://humphrycc.github.io/2021/04/12/What-s-this-extern-C-thing/index.html">
 <meta property="og:site_name" content="HUCHI">
+<meta property="og:description" content="What’s this extern “C” thing?  Most C++ compilers do something called name decoration, or name mangling. In short, in order to support C++ function overloading, and C++ type-safe linkage, most C++ co">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-12T13:14:16.000Z">
+<meta property="article:modified_time" content="2021-04-12T05:37:26.170Z">
 <meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternate" href="/atom.xml" title="HUCHI" type="application/atom+xml">
@@ -69,9 +74,7 @@
 </header>
 
       <div class="outer">
-        <section id="main">
-  
-    <article id="post-What-s-this-extern-C-thing" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+        <section id="main"><article id="post-What-s-this-extern-C-thing" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/04/12/What-s-this-extern-C-thing/" class="article-date">
   <time class="dt-published" datetime="2021-04-12T13:14:16.000Z" itemprop="datePublished">2021-04-12</time>
@@ -84,8 +87,8 @@
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/04/12/What-s-this-extern-C-thing/">What&#39;s this extern &#34;C&#34; thing?</a>
+    <h1 class="p-name article-title" itemprop="headline name">
+      What&#39;s this extern &#34;C&#34; thing?
     </h1>
   
 
@@ -134,83 +137,19 @@
     </footer>
   </div>
   
-</article>
-
-
-
+    
+<nav id="article-nav">
   
-    <article id="post-Why-is-an-unnamed-namespace-used-instead-of-static" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
-  <div class="article-meta">
-    <a href="/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/" class="article-date">
-  <time class="dt-published" datetime="2021-04-12T10:43:45.000Z" itemprop="datePublished">2021-04-12</time>
-</a>
-    
-  </div>
-  <div class="article-inner">
-    
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="p-name article-title" href="/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/">Why is an unnamed namespace used instead of static?</a>
-    </h1>
+    <a href="/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">Why is an unnamed namespace used instead of static?</div>
+    </a>
   
+</nav>
 
-      </header>
-    
-    <div class="e-content article-entry" itemprop="articleBody">
-      
-        <blockquote>
-<p><a target="_blank" rel="noopener" href="https://web.archive.org/web/20181115023158/http://www.comeaucomputing.com/techtalk/#nostatic">Why is an unnamed namespace used instead of static?</a></p>
-</blockquote>
-<p>in C++, some uses of the <code>static</code> keyword have been <strong>deprecated</strong>. In particular, an unnamed namespace should be favored over some previous uses of “file scope static’s”. In fact in some cases an unnamed namespace must be used in order to obtain a similar effect. That is to say, this code:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x.cpp</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">bool</span> flag = <span class="literal">false</span>; <span class="comment">// AAA</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span> </span>&#123; <span class="keyword">if</span> (flag)... &#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">bar</span><span class="params">()</span> </span>&#123; ...flag = <span class="literal">true</span>... &#125;</span><br></pre></td></tr></table></figure>
-
-<p>should instead often be composed this way in C++:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x.cpp</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="comment">/* NOTHING HERE!! */</span> &#123; <span class="comment">// BBB</span></span><br><span class="line">    <span class="keyword">bool</span> flag = <span class="literal">false</span>; <span class="comment">// no need for static here</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>The use of static in <code>AAA</code> indicates that flag has internal linkage. This means that flag is local to its translation unit (that is, effectively it is only known by its name in some source file, in this case <code>x.cpp</code>). This means that flag can’t be used by another translation unit (by its name at least). The goal is to have less global/cross-file name pollution in your programs while at the same time achieving some level of encapsulation. Such a goal is usually considered admirable and so therefore is often considered desirable (note that the goal, not the code, is being discussed in this sentence).</p>
-<p>Contrast this to <code>BBB</code>. In the case of using the unnamed namespace above, flag has external linkage, yet it is effectively local to the translation unit. It is effectively still local because although we did not give the namespace a name, the compiler generated a unique name for it. In effect, the compiler changes <code>BBB</code> into this:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Just get UNIQUE established</span></span><br><span class="line"><span class="keyword">namespace</span> UNIQUE &#123; &#125; <span class="comment">// CCC</span></span><br><span class="line"><span class="comment">// Bring UNIQUE into this translation unit</span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> UNIQUE;</span><br><span class="line"><span class="comment">// Now define UNIQUEs members</span></span><br><span class="line"><span class="keyword">namespace</span> UNIQUE &#123;</span><br><span class="line">    <span class="keyword">bool</span> flag = <span class="literal">false</span>; <span class="comment">// As Before</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>For each translation unit, a uniquely generated identifier name for <code>UNIQUE</code> somehow gets synthesized by the compiler, with the effect that no other translation unit can see names from an unnamed namespace, hence making it local even though the name may have external linkage.</p>
-<p>Therefore, although flag in <code>CCC</code> has external linkage, its real name is <code>UNIQUE::flag</code>, but since <code>UNIQUE</code> is only known to <code>x.cpp</code>, it’s effectively local to <code>x.cpp</code> and is therefore not known to any other translation unit.</p>
-<p>Ok, so far, most of the discussion has been about how the two provide local names, but what are the differences? And why was static deprecated and the unnamed namespace considered superior?</p>
-<p>First, if nothing else, static means many different things in C++ and reducing one such use is considered a step in the right direction by some people. Second to consider is that names in unnamed namespaces may have external linkage whereas with static a name must have internal linkage. In other words, although there is a syntactic transformation shown above between <code>AAA</code> and <code>BBB</code>, the two are not exactly equal (the one between <code>BBB</code> and <code>CCC</code> is equal).</p>
-<p>Most books and usenet posts usually leave you off about right here. No problem with that per se, as the above info is not to be tossed out the window. However, you can’t help but keep wondering what the <strong>BIG</strong> deal some people make about unnamed namespaces are. Some folks might even argue that they make your code less readable.</p>
-<p>What’s significant though is that <strong>some template arguments cannot be names with internal linkage</strong>, instead some require names with external linkage. Remember, the types of the arguments to templates become part of the instantiation type, but names with internal linkage aren’t available to other translation units. A good rule of thumb to consider (said rather loosely) is that external names shouldn’t depend upon names with less linkage (definitely not of those with no linkage, and often not even w ith names of internal linkage). And so it follows from the above that instantiating such a template with a static such as from AAA just isn’t going to work. This is all similar to why these won’t work:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">const</span> <span class="keyword">int</span>&amp; T&gt; <span class="class"><span class="keyword">struct</span> <span class="title">xyz</span> &#123;</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">int</span> c = <span class="number">1</span>;</span><br><span class="line">xyz&lt;c&gt; y; <span class="comment">// ok</span></span><br><span class="line"><span class="keyword">static</span> <span class="keyword">int</span> sc = <span class="number">1</span>; <span class="comment">// This is the kicker-out&#x27;er above</span></span><br><span class="line">xyz&lt;sc&gt; y2; <span class="comment">// not ok</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">char</span> *p&gt; <span class="class"><span class="keyword">struct</span> <span class="title">abc</span> &#123;</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">char</span> comeau[] = <span class="string">&quot;Comeau C++&quot;</span>;</span><br><span class="line">abc&lt;comeau&gt; co; <span class="comment">// ok</span></span><br><span class="line">abc&lt;<span class="string">&quot;Comeau C++&quot;</span>&gt; co2; <span class="comment">// not ok</span></span><br></pre></td></tr></table></figure>
-
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt; <span class="class"><span class="keyword">struct</span> <span class="title">qaz</span> &#123;</span> &#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">foo</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">char</span> buf[] = <span class="string">&quot;local&quot;</span>;</span><br><span class="line">    abc&lt;buf&gt; lb; <span class="comment">// not ok</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">char</span> buf2[] = <span class="string">&quot;local&quot;</span>;</span><br><span class="line">    abc&lt;buf2&gt; lb2; <span class="comment">// not ok</span></span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">qwerty</span> &#123;</span>&#125;;</span><br><span class="line">    qaz&lt;qwerty&gt; dq; <span class="comment">// not ok</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>Last but not least, <code>static</code> and unnamed namespaces are not the same because <code>static</code> is deficient as a name constrainer. Sure, a C programmer might use it for flag above, but what do you do when you want to layer or just encapsulate say a class, template, enum, or even another namespace? …for that you need namespaces. It might even be argued that you should wrap all your files in an unnamed namespace (all the file’s functions, classes, whatever) and then only pull out the parts other files should know about.</p>
-<p>Draw your attention to that that none of the above is equal to this:</p>
-<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// x.cpp</span></span><br><span class="line"><span class="keyword">namespace</span> &#123; <span class="comment">// DDD</span></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">bool</span> flag = <span class="literal">false</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>(The point of showing <code>DDD</code> is that you really wouldn’t want to say it. I guess one could say that it is redundant, and really just brings all the above issues right back (as in this flavor, it’s not external). So, it’s only shown to make sure you see that none of the previous versions look like this :).</p>
-<p>Note that namespaces containing <code>extern &quot;C&quot;</code> declarations are in some ways as if they were not declared in the namespace, so since an unnamed namespace is a namespace, this holds true for an unnamed namespace as well.</p>
-<p>Note also that the above discussion does not apply to the other uses of static: static lifetime, static members or to static locals in a function.</p>
-
-      
-    </div>
-    <footer class="article-footer">
-      <a data-url="https://humphrycc.github.io/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/" data-id="ckne5zgme0001cfoq6uf9bd7i" data-title="Why is an unnamed namespace used instead of static?" class="article-share-link">Share</a>
-      
-      
-      
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
-
-    </footer>
-  </div>
   
 </article>
-
-
-
-  
 
 
 </section>
