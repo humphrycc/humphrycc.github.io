@@ -4,7 +4,7 @@ date: 2021-04-12 10:43:45
 tags: c++
 ---
 
-> Copy from [Why is an unnamed namespace used instead of static?](https://web.archive.org/web/20181115023158/http://www.comeaucomputing.com/techtalk/#nostatic)
+> [Why is an unnamed namespace used instead of static?](https://web.archive.org/web/20181115023158/http://www.comeaucomputing.com/techtalk/#nostatic)
 
 in C++, some uses of the `static` keyword have been **deprecated**. In particular, an unnamed namespace should be favored over some previous uses of "file scope static's". In fact in some cases an unnamed namespace must be used in order to obtain a similar effect. That is to say, this code:
 
