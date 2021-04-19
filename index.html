@@ -71,6 +71,223 @@
       <div class="outer">
         <section id="main">
   
+    <article id="post-When-to-use-virtual-destructors" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/19/When-to-use-virtual-destructors/" class="article-date">
+  <time class="dt-published" datetime="2021-04-19T13:41:17.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/19/When-to-use-virtual-destructors/">When to use virtual destructors?</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/461203/when-to-use-virtual-destructors">https://stackoverflow.com/questions/461203/when-to-use-virtual-destructors</a></p>
+</blockquote>
+<blockquote>
+<p>I have a solid understanding of most OOP theory but the one thing that confuses me a lot is virtual destructors.<br>I thought that the destructor always gets called no matter what and for every object in the chain.<br>When are you meant to make them virtual and why?</p>
+</blockquote>
+<p>Virtual destructors are useful when you might potentially delete an instance of a derived class through a pointer to base class:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> </span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">    <span class="comment">// some virtual methods</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base</span><br><span class="line">&#123;</span><br><span class="line">    ~<span class="built_in">Derived</span>()</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="comment">// Do some important cleanup</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Here, you’ll notice that I didn’t declare Base’s destructor to be <code>virtual</code>. Now, let’s have a look at the following snippet:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Base *b = <span class="keyword">new</span> <span class="built_in">Derived</span>();</span><br><span class="line"><span class="keyword">delete</span> b; <span class="comment">// Here&#x27;s the problem!</span></span><br></pre></td></tr></table></figure>
+
+<p>Since Base’s destructor is not <code>virtual</code> and <code>b</code> is a <code>Base*</code> pointing to a Derived object, <code>delete b</code> has undefined behaviour:</p>
+<blockquote>
+<p>[In <code>delete b</code>], if the static type of the object to be deleted is different from its dynamic type, the static type shall be a base class of the dynamic type of the object to be deleted and <strong>the static type shall have a virtual destructor or the behavior is undefined</strong>.</p>
+</blockquote>
+<p>In most implementations, the call to the destructor will be resolved like any non-virtual code, meaning that the destructor of the base class will be called but not the one of the derived class, resulting in a resources leak.</p>
+<p>To sum up, always make base classes’ destructors <code>virtual</code> when they’re meant to be manipulated polymorphically.</p>
+<p>If you want to prevent the deletion of an instance through a base class pointer, you can make the base class destructor protected and nonvirtual; by doing so, the compiler won’t let you call <code>delete</code> on a base class pointer.</p>
+<p>You can learn more about virtuality and <code>virtual</code> base class destructor in <a target="_blank" rel="noopener" href="http://www.gotw.ca/publications/mill18.htm">this article from Herb Sutter</a>.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://humphrycc.github.io/2021/04/19/When-to-use-virtual-destructors/" data-id="cknodrxas000aa3oi4wsdarwa" data-title="When to use virtual destructors?" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-What-is-the-use-of-having-destructor-as-private" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/19/What-is-the-use-of-having-destructor-as-private/" class="article-date">
+  <time class="dt-published" datetime="2021-04-19T13:12:57.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/19/What-is-the-use-of-having-destructor-as-private/">What is the use of having destructor as private?</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/631783/what-is-the-use-of-having-destructor-as-private">https://stackoverflow.com/questions/631783/what-is-the-use-of-having-destructor-as-private</a></p>
+</blockquote>
+<p>Basically, any time you want some other class to be responsible for the life cycle of your class’ objects, or you have reason to prevent the destruction of an object, you can make the destructor <code>private</code>.</p>
+<p>For instance, if you’re doing some sort of reference counting thing, you can have the object (or manager that has been <code>friend</code>ed) responsible for counting the number of references to itself and delete it when the number hits zero. A <code>private</code> dtor would prevent anybody else from deleting it when there were still references to it.</p>
+<p>For another instance, what if you have an object that has a manager (or itself) that may destroy it or may decline to destroy it depending on other conditions in the program, such as a database connection being open or a file being written. You could have a <code>request_delete</code> method in the class or the manager that will check that condition and it will either delete or decline, and return a status telling you what it did. That’s far more flexible that just calling “delete”.</p>
+<p>Such an object <strong>can only be created on the stack in the scope of a <code>friend</code> or itself</strong>. Additionally it cannot ba a static or global object. And deletion has to be done via a <code>friend</code> or a member. A product may use a single Object hierarchy and a custom memory-manager – such scenarios may use a <code>private</code> dtor. <strong>Such an object can be created on the stack by using placement <code>new</code>.</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">a</span> &#123;</span></span><br><span class="line">    ~<span class="built_in">a</span>() &#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">friend</span> <span class="keyword">void</span> <span class="title">delete_a</span><span class="params">(a* p)</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">delete_a</span><span class="params">(a* p)</span>  </span>&#123;</span><br><span class="line">    <span class="keyword">delete</span> p;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    a *p = <span class="keyword">new</span> a;</span><br><span class="line">    <span class="built_in">delete_a</span>(p);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Example from The C++ Programming Language 17.2.4 Calling Constructors and Destructors.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Nonlocal</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">destroy</span><span class="params">()</span> </span>&#123; <span class="keyword">this</span>−&gt; ̃<span class="built_in">Nonlocal</span>(); &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">     ̃<span class="built_in">Nonlocal</span>();</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">user</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Nonlocal x;            <span class="comment">// error: cannot destory a Nonlocal</span></span><br><span class="line">    X* p = <span class="keyword">new</span> Nonlocal;   <span class="comment">// OK</span></span><br><span class="line">	</span><br><span class="line">	<span class="keyword">delete</span> p;              <span class="comment">// error: cannot destroy a Nonlocal</span></span><br><span class="line">	p.<span class="built_in">destroy</span>();           <span class="comment">// OK</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://humphrycc.github.io/2021/04/19/What-is-the-use-of-having-destructor-as-private/" data-id="cknodrxam0004a3oid5hl01xz" data-title="What is the use of having destructor as private?" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-What-uses-are-there-for-placement-new" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/19/What-uses-are-there-for-placement-new/" class="article-date">
+  <time class="dt-published" datetime="2021-04-19T12:59:00.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/19/What-uses-are-there-for-placement-new/">What uses are there for &#34;placement new&#34;?</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/222557/what-uses-are-there-for-placement-new">https://stackoverflow.com/questions/222557/what-uses-are-there-for-placement-new</a></p>
+</blockquote>
+<blockquote>
+<p>Has anyone here ever used C++’s “placement new”? If so, what for? It looks to me like it would only be useful on memory-mapped hardware.</p>
+</blockquote>
+<p>Placement new allows you to <strong>construct an object in memory that’s already allocated</strong>.</p>
+<p>You may want to do this for optimization when you need to construct multiple instances of an object, and it is faster not to re-allocate memory each time you need a new instance. Instead, it might be more efficient to perform a single allocation for a chunk of memory that can hold multiple objects, even though you don’t want to use all of it at once.</p>
+<p>DevX gives a <a target="_blank" rel="noopener" href="http://www.devx.com/tips/Tip/12582">good example</a>:</p>
+<blockquote>
+<p>Standard C++ also supports placement new operator, which constructs an object on a pre-allocated buffer. This is useful when building a memory pool, a garbage collector or simply when performance and exception safety are paramount (there’s no danger of allocation failure since the memory has already been allocated, and constructing an object on a pre-allocated buffer takes less time):</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">char</span> *buf  = <span class="keyword">new</span> <span class="keyword">char</span>[<span class="built_in"><span class="keyword">sizeof</span></span>(string)]; <span class="comment">// pre-allocated buffer</span></span><br><span class="line">string *p = <span class="built_in"><span class="keyword">new</span></span> (buf) <span class="built_in">string</span>(<span class="string">&quot;hi&quot;</span>);    <span class="comment">// placement new</span></span><br><span class="line">string *q = <span class="keyword">new</span> <span class="built_in">string</span>(<span class="string">&quot;hi&quot;</span>);          <span class="comment">// ordinary heap allocation</span></span><br></pre></td></tr></table></figure>
+
+<p>You may also want to be sure there can be <em>no allocation failure at a certain part of critical code</em> (for instance, in code executed by a pacemaker). In that case you would want to allocate memory earlier, then use placement new within the critical section.</p>
+<p>Deallocation in placement new<br>You should not deallocate every object that is using the memory buffer. Instead you should <code>delete[]</code> only the original buffer. You would have to then call the destructors of your classes manually. For a good suggestion on this, please see Stroustrup’s FAQ on: <a target="_blank" rel="noopener" href="https://www.stroustrup.com/bs_faq2.html#placement-delete">Is there a “placement delete”?</a>.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://humphrycc.github.io/2021/04/19/What-uses-are-there-for-placement-new/" data-id="cknodrxar0008a3oi9h6o6lba" data-title="What uses are there for &#34;placement new&#34;?" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
+    <article id="post-Constructors-and-destructors-order-with-class-hierarchies" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/19/Constructors-and-destructors-order-with-class-hierarchies/" class="article-date">
+  <time class="dt-published" datetime="2021-04-19T12:49:40.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="p-name article-title" href="/2021/04/19/Constructors-and-destructors-order-with-class-hierarchies/">Constructors and destructors order with class hierarchies</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p>The C++ Programming Language 17.2.3 Base and Member Destructors</p>
+</blockquote>
+<p>Constructors and destructors interact correctly with class hierarchies. A constructor builds a class object <strong>from the bottom up</strong>:</p>
+<p>[1] first, the constructor invokes its base class constructors,<br>[2] then, it invokes the member constructors, and<br>[3] finally, it executes its own body.</p>
+<p>A destructor <strong>tears down</strong> an object in the reverse order:</p>
+<p>[1] first, the destructor executes its own body,<br>[2] then, it invokes its member destructors, and<br>[3] finally, it invokes its base class destructors.</p>
+<p>In particular, a <code>virtual</code> base is constructed before any base that might use it and destroyed after all such bases. This ordering ensures that a base or a member is not used before it has been initialized or used after it has been destroyed. The programmer can defeat this simple and essential rule, but only through deliberate circumvention involving passing pointers to uninitialized variables as arguments. Doing so violates language rules and the results are usually disastrous.</p>
+<p>Constructors execute member and base constructors in <strong>declaration order</strong> (not the order of initializers): if two constructors used a different order, the destructor could not (without serious overhead) guarantee to destroy in the reverse order of construction.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">X</span> &#123;</span> <span class="built_in">X</span>(<span class="keyword">int</span>); &#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">S2</span> &#123;</span></span><br><span class="line">    X x;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">S2 x1;     <span class="comment">// error</span></span><br><span class="line">S2 x2 &#123;<span class="number">1</span>&#125;; <span class="comment">// OK: x2.x is initialized with 1</span></span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://humphrycc.github.io/2021/04/19/Constructors-and-destructors-order-with-class-hierarchies/" data-id="cknodrxad0000a3oidirfeted" data-title="Constructors and destructors order with class hierarchies" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+</article>
+
+
+
+  
     <article id="post-What-is-an-invariant" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
   <div class="article-meta">
     <a href="/2021/04/19/What-is-an-invariant/" class="article-date">
@@ -107,7 +324,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://humphrycc.github.io/2021/04/19/What-is-an-invariant/" data-id="ckno3z1gt0000brow86jacyo0" data-title="What is an invariant?" class="article-share-link">Share</a>
+      <a data-url="https://humphrycc.github.io/2021/04/19/What-is-an-invariant/" data-id="cknodrxai0001a3oi9j3g8huo" data-title="What is an invariant?" class="article-share-link">Share</a>
       
       
       
@@ -175,7 +392,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://humphrycc.github.io/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/" data-id="ckno3z1gz0001browf4rv66mb" data-title="What is the difference between a concrete class and an abstract class?" class="article-share-link">Share</a>
+      <a data-url="https://humphrycc.github.io/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/" data-id="cknodrxal0003a3oia1t24b0n" data-title="What is the difference between a concrete class and an abstract class?" class="article-share-link">Share</a>
       
       
       
@@ -243,7 +460,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://humphrycc.github.io/2021/04/12/What-s-this-extern-C-thing/" data-id="ckno3z1h30003brow752pfst9" data-title="What&#39;s this extern &#34;C&#34; thing?" class="article-share-link">Share</a>
+      <a data-url="https://humphrycc.github.io/2021/04/12/What-s-this-extern-C-thing/" data-id="cknodrxao0005a3oi01ok5yi5" data-title="What&#39;s this extern &#34;C&#34; thing?" class="article-share-link">Share</a>
       
       
       
@@ -315,7 +532,7 @@
       
     </div>
     <footer class="article-footer">
-      <a data-url="https://humphrycc.github.io/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/" data-id="ckno3z1h40004brow00z5e61p" data-title="Why is an unnamed namespace used instead of static?" class="article-share-link">Share</a>
+      <a data-url="https://humphrycc.github.io/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/" data-id="cknodrxau000da3oi3fe14zcx" data-title="Why is an unnamed namespace used instead of static?" class="article-share-link">Share</a>
       
       
       
@@ -374,19 +591,23 @@
       <ul>
         
           <li>
+            <a href="/2021/04/19/When-to-use-virtual-destructors/">When to use virtual destructors?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/What-is-the-use-of-having-destructor-as-private/">What is the use of having destructor as private?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/What-uses-are-there-for-placement-new/">What uses are there for &#34;placement new&#34;?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/Constructors-and-destructors-order-with-class-hierarchies/">Constructors and destructors order with class hierarchies</a>
+          </li>
+        
+          <li>
             <a href="/2021/04/19/What-is-an-invariant/">What is an invariant?</a>
-          </li>
-        
-          <li>
-            <a href="/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/">What is the difference between a concrete class and an abstract class?</a>
-          </li>
-        
-          <li>
-            <a href="/2021/04/12/What-s-this-extern-C-thing/">What&#39;s this extern &#34;C&#34; thing?</a>
-          </li>
-        
-          <li>
-            <a href="/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/">Why is an unnamed namespace used instead of static?</a>
           </li>
         
       </ul>
