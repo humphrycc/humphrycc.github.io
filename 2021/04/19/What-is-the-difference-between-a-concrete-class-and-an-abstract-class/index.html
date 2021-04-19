@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>What is the difference between a concrete class and an abstract class? | HUCHI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;2149207&#x2F;what-is-the-difference-between-a-concrete-class-and-an-abstract-class   I am learning C++, but I am confused about abstract class and concrete class. Some">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What is the difference between a concrete class and an abstract class?">
+<meta property="og:url" content="https://humphrycc.github.io/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/index.html">
+<meta property="og:site_name" content="HUCHI">
+<meta property="og:description" content="https:&#x2F;&#x2F;stackoverflow.com&#x2F;questions&#x2F;2149207&#x2F;what-is-the-difference-between-a-concrete-class-and-an-abstract-class   I am learning C++, but I am confused about abstract class and concrete class. Some">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-19T11:28:51.000Z">
+<meta property="article:modified_time" content="2021-04-19T03:48:40.326Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="HUCHI" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">HUCHI</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://humphrycc.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-What-is-the-difference-between-a-concrete-class-and-an-abstract-class" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/" class="article-date">
+  <time class="dt-published" datetime="2021-04-19T11:28:51.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      What is the difference between a concrete class and an abstract class?
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/2149207/what-is-the-difference-between-a-concrete-class-and-an-abstract-class">https://stackoverflow.com/questions/2149207/what-is-the-difference-between-a-concrete-class-and-an-abstract-class</a></p>
+</blockquote>
+<blockquote>
+<p>I am learning C++, but I am confused about abstract class and concrete class. Some real world examples would be appreciated.<br>what is the difference between normal derived class and concrete class?</p>
+</blockquote>
+<p>An <strong>abstract class</strong> is a class for which one or more methods are declared but not defined, meaning that the compiler knows <em>these methods are part of the class, but not what code to execute for that method</em>. These are called abstract methods. Here is an example of an abstract class.</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">shape</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>This declares an abstract class which specifies that any descendants of the class should implement the <code>draw</code> method if the class is to be <strong>concrete</strong>. You cannot instantiate this class because it is abstract, after all, the compiler wouldn’t know what code to execute if you called member <code>draw</code>. So you can not do the following:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">shape <span class="title">my_shape</span><span class="params">()</span></span>;</span><br><span class="line">my_shape.<span class="built_in">draw</span>();</span><br></pre></td></tr></table></figure>
+
+<p>To be able to actually use the draw method you would need to <em>derive</em> classes from this abstract class, which do implement the <code>draw</code> method, making the classes concrete:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">circle</span> :</span> <span class="keyword">public</span> shape &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">circle</span>(<span class="keyword">int</span> x, <span class="keyword">int</span> y, <span class="keyword">int</span> radius) &#123;</span><br><span class="line">    <span class="comment">/* set up the circle */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do stuff to draw the circle */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">rectangle</span> :</span> <span class="keyword">public</span> shape &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="built_in">rectangle</span>(<span class="keyword">int</span> min_x, <span class="keyword">int</span> min_y, <span class="keyword">int</span> max_x, <span class="keyword">int</span> max_y) &#123;</span><br><span class="line">    <span class="comment">/* set up rectangle */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do stuff to draw the rectangle */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Now you can instantiate the concrete objects <code>circle</code> and <code>rectangle</code> and use their <code>draw</code> methods:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">circle <span class="title">my_circle</span><span class="params">(<span class="number">40</span>, <span class="number">30</span>, <span class="number">10</span>)</span></span>;</span><br><span class="line"><span class="function">rectangle <span class="title">my_rectangle</span><span class="params">(<span class="number">20</span>, <span class="number">10</span>, <span class="number">50</span>, <span class="number">15</span>)</span></span>;</span><br><span class="line">my_circle.<span class="built_in">draw</span>();</span><br><span class="line">my_rectangle.<span class="built_in">draw</span>();</span><br></pre></td></tr></table></figure>
+
+<p>Now of course the question is, why would you want to do this? Couldn’t you just as well have defined the <code>circle</code> and <code>rectangle</code> classes and have done away with the whole shape class? You could, but then you wouldn’t be able to take advantage of their inheritance:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::vector&lt;shape*&gt; my_scene;</span><br><span class="line">my_scene.push_back(new circle(40, 30, 10));</span><br><span class="line">my_scene.push_back(new rectangle(20, 10, 50, 15));</span><br><span class="line">std::for_each(my_scene.begin(), my_scene.end(), std::mem_fun_ref(&amp;shape::draw)</span><br></pre></td></tr></table></figure>
+
+<p>This code let’s you collect all your shapes into one container. This makes it a lot easier if you have a lot of shapes and many different shapes in your scene. For example we can now draw all the shapes in one go, and the code that does so doesn’t even need to know about the different types of shapes we have.</p>
+<p>Now finally we need to know why the <code>draw</code> function of <code>shape</code> is abstract, and not just an empty function, i.e. why didn’t we just define:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">shape</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">draw</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do nothing */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>The reason for this is that we don’t really want objects of type <code>shape</code>, they wouldn’t be real things anyway, they would be abstract. So it doesn’t make any sense to define an implementation for the <code>draw</code> method, even an empty one. Making the <code>shape</code> class abstract prevents us from mistakenly instantiating the <code>shape</code> class, or mistakenly calling the empty <code>draw</code> function of the base class instead of the <code>draw</code> function of the derived classes. In effect we define an interface for any class that would like to behave like a shape, we say that any such class should have a <code>draw</code> method that looks like we have specified it should.</p>
+<p>To answer you last question, there isn’t any such thing as a ‘normal derived class’ <em>every class is either abstract or concrete</em>. A class that has any abstract methods is abstract, any class that doesn’t is concrete. It’s just a way to differentiate the two types of classes. A base class can be either abstract or concrete and a derived class can be either abstract or concrete:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">abstract_base</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">abstract_method1</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">abstract_method2</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">concrete_base</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">concrete_method1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do something */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">abstract_derived1</span> :</span> <span class="keyword">public</span> abstract_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">abstract_method3</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">abstract_derived2</span> :</span> <span class="keyword">public</span> concrete_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">abstract_method3</span><span class="params">()</span> </span>= <span class="number">0</span>;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">abstract_derived3</span> :</span> <span class="keyword">public</span> abstract_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="title">abstract_method1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do something */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/* note that we do not provide an implementation for</span></span><br><span class="line"><span class="comment">     abstract_method2 so the class is still abstract */</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">concrete_derived1</span> :</span> <span class="keyword">public</span> concrete_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">void</span> <span class="title">concrete_method2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do something */</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">concrete_derived2</span> :</span> <span class="keyword">public</span> abstract_base &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">abstract_method1</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do something */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">abstract_method2</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* do something */</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="comment">/* This class is now concrete because no abstract methods remain */</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://humphrycc.github.io/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/" data-id="ckno26i3z0000ceop7ss9cpn6" data-title="What is the difference between a concrete class and an abstract class?" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+  
+    <a href="/2021/04/12/What-s-this-extern-C-thing/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">What&#39;s this extern &#34;C&#34; thing?</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/c/" style="font-size: 10px;">c++</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/04/19/What-is-the-difference-between-a-concrete-class-and-an-abstract-class/">What is the difference between a concrete class and an abstract class?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/12/What-s-this-extern-C-thing/">What&#39;s this extern &#34;C&#34; thing?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/12/Why-is-an-unnamed-namespace-used-instead-of-static/">Why is an unnamed namespace used instead of static?</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
