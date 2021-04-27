@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  
+  <title>Virtuality | HUCHI</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="http:&#x2F;&#x2F;www.gotw.ca&#x2F;publications&#x2F;mill18.htm   This article appeared in C&#x2F;C++ Users Journal, 19(9), September 2001.  This month, I want to present up-to-date answers to two recurring questions about vi">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Virtuality">
+<meta property="og:url" content="https://humphrycc.github.io/2021/04/19/Virtuality/index.html">
+<meta property="og:site_name" content="HUCHI">
+<meta property="og:description" content="http:&#x2F;&#x2F;www.gotw.ca&#x2F;publications&#x2F;mill18.htm   This article appeared in C&#x2F;C++ Users Journal, 19(9), September 2001.  This month, I want to present up-to-date answers to two recurring questions about vi">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2021-04-19T14:52:11.000Z">
+<meta property="article:modified_time" content="2021-04-27T05:45:50.065Z">
+<meta property="article:author" content="John Doe">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="HUCHI" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+    
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/typeface-source-code-pro@0.0.71/index.min.css">
+
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+    
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.min.css">
+
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">HUCHI</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="https://humphrycc.github.io"></form>
+      </div>
+    </div>
+  </div>
+</header>
+
+      <div class="outer">
+        <section id="main"><article id="post-Virtuality" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  <div class="article-meta">
+    <a href="/2021/04/19/Virtuality/" class="article-date">
+  <time class="dt-published" datetime="2021-04-19T14:52:11.000Z" itemprop="datePublished">2021-04-19</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 class="p-name article-title" itemprop="headline name">
+      Virtuality
+    </h1>
+  
+
+      </header>
+    
+    <div class="e-content article-entry" itemprop="articleBody">
+      
+        <blockquote>
+<p><a target="_blank" rel="noopener" href="http://www.gotw.ca/publications/mill18.htm">http://www.gotw.ca/publications/mill18.htm</a></p>
+</blockquote>
+<blockquote>
+<p><em>This article appeared in <strong>C/C++ Users Journal, 19(9), September 2001</strong>.</em></p>
+</blockquote>
+<p>This month, I want to present up-to-date answers to two recurring questions about <code>virtual</code> functions. These answers then lead directly to four class design guidelines.</p>
+<p>The questions are old, but people still keep asking them, and some of the answers have changed over time as we’ve gained experience with modern C++.</p>
+<h1 id="Virtual-Question-1-Publicity-vs-Privacy"><a href="#Virtual-Question-1-Publicity-vs-Privacy" class="headerlink" title="Virtual Question #1: Publicity vs. Privacy?"></a>Virtual Question #1: Publicity vs. Privacy?</h1><p>The first of the two classic questions we’ll consider is this: <strong>“When should virtual functions be <code>public</code>, protected, or <code>private</code>?”</strong> The short answer is: <em>Rarely if ever, sometimes, and by default, respectively - the same answer we’ve already learned for other kinds of class members.</em></p>
+<p>Most of us have learned through bitter experience to make all class members <code>private</code> by default unless we really need to expose them. That’s just good encapsulation. Certainly we’ve long ago learned that data members should always be <code>private</code> (except only in the case of C-style data structs, which are merely convenient groupings of data and are not intended to encapsulate anything). The same also goes for member functions, and so I propose the following guidelines which could be summarized as a statement about the benefits of privatization.</p>
+<h2 id="Guideline-1-Prefer-to-make-interfaces-nonvirtual-using-Template-Method"><a href="#Guideline-1-Prefer-to-make-interfaces-nonvirtual-using-Template-Method" class="headerlink" title="Guideline #1: Prefer to make interfaces nonvirtual, using Template Method."></a>Guideline #1: Prefer to make interfaces nonvirtual, using Template Method.</h2><p>Interestingly, the C++ standard library already overwhelmingly follows this guideline. Not counting destructors (which are discussed separately later on under Guideline #4), and not double-counting the same <code>virtual</code> function twice when it appears again in a specialization of a class template, here’s what the standard library has:</p>
+<ul>
+<li>6 public <code>virtual</code> functions, all of which are <code>std::exception::what()</code> and its overrides</li>
+<li>142 nonpublic <code>virtual</code> functions</li>
+</ul>
+<p>Why is this such a good idea? Let’s investigate.</p>
+<p>Traditionally, many programmers were used to writing base classes using <code>public</code> <code>virtual</code> functions to directly and simultaneously specify both the interface and the customizable behavior. For example, we might write:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example 1: A traditional base class.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// Each of these functions might optionally be</span></span><br><span class="line">    <span class="comment">// pure virtual, and if so might or might not have</span></span><br><span class="line">    <span class="comment">// an implementation in Widget; see Item 27 in [1].</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">Process</span><span class="params">( Gadget&amp; )</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">IsDone</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>The problem is that “simultaneously” part, because each <code>virtual</code> function is doing two jobs: It’s <em>specifying interface</em> because it’s <code>public</code> and therefore directly part of the interface <code>Widget</code> presents to the rest of the world; and it’s <em>specifying implementation detail</em>, namely the internally customizable behavior, because it’s <code>virtual</code> and therefore provides a hook for derived classes to replace the base implementation of that function (if any). That a <code>public</code> <code>virtual</code> function inherently has two significantly different jobs is a sign that it’s not separating concerns well and that we should consider a different approach.</p>
+<p>What if we want to separate the specification of interface from the specification of the implementation’s customizable behavior? Then we end up with something that should remind us strongly of the Template Method pattern[2], because that’s exactly what it is: [Later note: Actually it’s a more restricted idiom with a form similar to that of Template Method. This idiom deserves its own name, and since writing this article I’ve switched to calling the idiom the Non-Virtual Interface Idiom, or NVI for short. -hps]</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example 2: A more modern base class, using</span></span><br><span class="line"><span class="comment">// Template Method to separate interface from</span></span><br><span class="line"><span class="comment">// internals.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Widget</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	<span class="comment">// Stable, nonvirtual interface.</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="function"><span class="keyword">int</span> <span class="title">Process</span><span class="params">( Gadget&amp; )</span></span>; <span class="comment">// uses DoProcess...()</span></span><br><span class="line">	<span class="function"><span class="keyword">bool</span> <span class="title">IsDone</span><span class="params">()</span></span>;          <span class="comment">// uses DoIsDone()</span></span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	<span class="comment">// Customization is an implementation detail that may</span></span><br><span class="line">	<span class="comment">// or may not directly correspond to the interface.</span></span><br><span class="line">	<span class="comment">// Each of these functions might optionally be</span></span><br><span class="line">	<span class="comment">// pure virtual, and if so might or might not have</span></span><br><span class="line">	<span class="comment">// an implementation in Widget; see Item 27 in [1].</span></span><br><span class="line">	<span class="comment">//</span></span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">DoProcessPhase1</span><span class="params">( Gadget&amp; )</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">int</span> <span class="title">DoProcessPhase2</span><span class="params">( Gadget&amp; )</span></span>;</span><br><span class="line">	<span class="function"><span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="title">DoIsDone</span><span class="params">()</span></span>;</span><br><span class="line">	<span class="comment">// ...</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Prefer to use Template Method to make the interface stable and nonvirtual, while delegating customizable work to nonpublic <code>virtual</code> functions that are responsible for implementing the customizable behavior. After all, <code>virtual</code> functions are designed to let derived classes customize behavior; it’s better to not let publicly derived classes also customize the inherited interface, which is supposed to be consistent.</p>
+<p>The Template Method approach has several benefits and no significant drawbacks.</p>
+<p>First, note that the base class is now in complete control of its interface and policy, and can enforce interface preconditions and postconditions, insert instrumentation, and do any similar work all in a single convenient reusable place - the nonvirtual interface function. This promotes good class design because it lets the base class enforce the substitutability compliance of derived classes in accord with the Liskov Substitution Principle[3], to whatever extent enforcement makes sense. If efficiency is an issue, the base class can elect to check certain kinds of pre- and postconditions only in a debug mode, for example via a non-debug “release” build that completely removes the checking code from the executable image, or via a configurable debug mode that suppresses selected checking code at runtime.</p>
+<p>Second, when we’ve better separated interface and implementation, we’re free to make each take the form it naturally wants to take instead of trying to find a compromise that forces them to look the same. For example, notice that in Example 2 we’ve incidentally decided that it makes more sense for our users to see a single <code>Process()</code> function while allowing more flexible customization in two parts, <code>DoProcessPhase1()</code> and <code>DoProcessPhase2()</code>. And it was easy. We couldn’t have done this with the <code>public</code> <code>virtual</code> version without making the separation also visible in the interface, thereby adding complexity for the user who would then have to know to call two functions in the right way. (For more discussion of a related example, see also Item 23 in Exceptional C++[4].)</p>
+<p>Third, the base class is now less fragile in the face of change. We are free to change our minds later and add pre- and postcondition checking, or separate processing into more steps, or refactor, or implement a fuller interface/implementation separation using the Pimpl idiom[4], or make other modifications to <code>Widget</code>‘s customizability, without affecting the code that uses <code>Widget</code>. For example, it’s much more difficult to start with a <code>public</code> <code>virtual</code> function and later try to wrap it for pre- and postcondition checking after the fact, than it is to provide a dumb passthrough nonvirtual wrapper up front (even if no checking or other extra work is immediately needed) and insert the checking later. (For more discussion of how a class like <code>Widget</code> is less fragile and more amenable to future revision and refactoring, see the article “Virtually Yours”[5].)</p>
+<p>“But but but,” some have objected, “let’s say that all the <code>public</code> nonvirtual function does initially is pass through to the <code>private</code> <code>virtual</code> one. It’s just one stupid little line. Isn’t that pretty useless, and indeed haven’t we lost something? Haven’t we lost some efficiency (the extra function call) and added some complexity (the extra function)?” No, and no. First, a word about efficiency: No, none is lost in practice because if the <code>public</code> function is a one-line passthrough declared <code>inline</code>, all compilers I know of will optimize it away entirely, leaving no overhead. (Indeed, some compilers will always make such a function <code>inline</code> and eliminate it, whether you personally really wanted it to or not, but that’s another story.) Second, a word about complexity: The only complexity is the extra time it takes to write the one-line wrapper function, which is trivial. Period. That’s it. C’est tout. The interfaces are unaffected: The class still has exactly the same number of <code>public</code> functions for a <code>public</code> user to learn, and it has exactly the same number of <code>virtual</code> functions for a derived class programmer to learn. Neither the interface presented to the outside world, nor the inheritance interface presented to derived classes, has become any more complex in itself for either audience. The two interfaces are just explicitly separated, is all, and that is a Good Thing.</p>
+<p>Well, that justifies nonvirtual interfaces and tells us that <code>virtual</code> functions benefit from being nonpublic, but we haven’t really answered whether <code>virtual</code> functions should be <code>private</code> or protected. So let’s answer that:</p>
+<h2 id="Guideline-2-Prefer-to-make-virtual-functions-private"><a href="#Guideline-2-Prefer-to-make-virtual-functions-private" class="headerlink" title="Guideline #2: Prefer to make virtual functions private."></a>Guideline #2: Prefer to make <code>virtual</code> functions <code>private</code>.</h2><p>That’s easy. This lets the derived classes override the function to customize the behavior as needed, without further exposing the <code>virtual</code> functions directly by making them callable by derived classes (as would be possible if the functions were just protected). The point is that <code>virtual</code> functions exist to allow customization; unless they also need to be invoked directly from within derived classes’ code, there’s no need to ever make them anything but <code>private</code>. But sometimes we do need to invoke the base versions of <code>virtual</code> functions (see the article “Virtually Yours”[5] for an example), and in that case only it makes sense to make those <code>virtual</code> functions protected, thus:</p>
+<h2 id="Guideline-3-Only-if-derived-classes-need-to-invoke-the-base-implementation-of-a-virtual-function-make-the-virtual-function-protected"><a href="#Guideline-3-Only-if-derived-classes-need-to-invoke-the-base-implementation-of-a-virtual-function-make-the-virtual-function-protected" class="headerlink" title="Guideline #3: Only if derived classes need to invoke the base implementation of a virtual function, make the virtual function protected."></a>Guideline #3: Only if derived classes need to invoke the base implementation of a <code>virtual</code> function, make the <code>virtual</code> function protected.</h2><p>The bottom line is that Template Method as applied to virtual functions nicely helps us to separate interface from implementation. It’s possible to make the separation even more complete, of course, by completely divorcing interface from implementation using patterns like Bridge[2], idioms like Pimpl (principally for managing compile-time dependencies and exception safety guarantees)[1] [4] or the more general handle/body or envelope/letter[6], or other approaches. Unless you need a more complete interface/implementation separation, though, Template Method will often be sufficient for your needs. On the flip side, I am arguing that this use of Template Method is also a good idea to adopt by default and view as a necessary minimum separation in practice in new code. After all, it costs nothing (beyond writing an extra line of code) and buys quite a bit of pain reduction down the road.</p>
+<p>Former communist countries are learning the benefits of privatization, in those cases where privatization makes sense. The lesson of healthy privatization is likewise not lost on good class designers. For more examples of using the Template Method pattern to <code>privatize</code> <code>virtual</code> behavior, see “Virtually Yours”.[5]</p>
+<p>Speaking of that article, did you notice that the code there presented a <code>public</code> <code>virtual</code> destructor? This brings us to the second topic of this month’s column:</p>
+<h1 id="Virtual-Question-2-What-About-Base-Class-Destructors"><a href="#Virtual-Question-2-What-About-Base-Class-Destructors" class="headerlink" title="Virtual Question #2: What About Base Class Destructors?"></a>Virtual Question #2: What About Base Class Destructors?</h1><p>The second classic question we’ll consider is that old destructor chestnut: “Should base class destructors be <code>virtual</code>?”</p>
+<p>Sigh. I wish this were only a frequently asked question. Alas, it’s more often a frequently debated question. If I had a penny for every time I’ve seen this debate, I could buy a cup of coffee. Not just any old coffee, mind you - I could buy a genuine Starbucks Venti double-Valencia latte (my current favorite). Maybe even two of them, if I was willing to throw in a dime of my own.</p>
+<p>The usual answer to this question is: “Huh? Of course base class destructors should always be <code>virtual</code>!” This answer is wrong, and the C++ standard library itself contains counter examples refuting it, but it’s right often enough to give the illusion of correctness.</p>
+<p>The slightly less usual and somewhat more correct answer is: “Huh? Of course base class destructors should be <code>virtual</code> if you’re going to delete polymorphically (i.e., delete via a pointer to base)!” This answer is technically right but doesn’t go far enough.</p>
+<p>I’ve recently come to conclude that the fully correct answer is this:</p>
+<h2 id="Guideline-4-A-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-nonvirtual"><a href="#Guideline-4-A-base-class-destructor-should-be-either-public-and-virtual-or-protected-and-nonvirtual" class="headerlink" title="Guideline #4: A base class destructor should be either public and virtual, or protected and nonvirtual."></a>Guideline #4: A base class destructor should be either <code>public</code> and <code>virtual</code>, or protected and nonvirtual.</h2><p>Let’s see why this is so.</p>
+<p>First, an obvious statement: Clearly any operation that will be performed through the base class interface, and that should behave virtually, should be <code>virtual</code>. That’s true even with Template Method, above, because although the <code>public</code> interface function is nonvirtual, the work is delegated to a nonpublic <code>virtual</code> function and we get the <code>virtual</code> behavior that we need.</p>
+<p>If deletion, therefore, can be performed polymorphically through the base class interface, then it must behave virtually and must be <code>virtual</code>. Indeed, the language requires it - if you delete polymorphically without a <code>virtual</code> destructor, you summon the dreaded specter of “undefined behavior,” a specter I personally would rather not meet in even a moderately well-lit alley, thank you very much. Hence:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example 3: Obvious need for virtual destructor.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Base</span> &#123;</span> <span class="comment">/*...*/</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Derived</span> :</span> <span class="keyword">public</span> Base &#123; <span class="comment">/*...*/</span> &#125;;</span><br><span class="line"></span><br><span class="line">Base* b = <span class="keyword">new</span> Derived;</span><br><span class="line"><span class="keyword">delete</span> b; <span class="comment">// Base::~Base() had better be virtual!</span></span><br></pre></td></tr></table></figure>
+
+<p>Note that the destructor is the one case where the Template Method pattern cannot be applied to a <code>virtual</code> function. Why not? Because once execution reaches the body of a base class destructor, any derived object parts have already been destroyed and no longer exist. If the Base destructor body were to call a <code>virtual</code> function, the <code>virtual</code> dispatch would reach no further down the inheritance hierarchy than Base itself. In a destructor (or constructor) body, further-derived classes just don’t exist any more (or yet).</p>
+<p>But base classes need not always allow polymorphic deletion. For example, in the standard library itself,[7] consider class templates such as <code>std::unary_function and std::binary_function</code>. Those two class templates look like this:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">Arg</span>, <span class="keyword">class</span> <span class="title">Result</span>&gt;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">unary_function</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">typedef</span> Arg    argument_type;</span><br><span class="line">	<span class="keyword">typedef</span> Result result_type;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">Arg1</span>, <span class="keyword">class</span> <span class="title">Arg2</span>, <span class="keyword">class</span> <span class="title">Result</span>&gt;</span></span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">binary_function</span></span></span><br><span class="line"><span class="class">&#123;</span></span><br><span class="line">	<span class="keyword">typedef</span> Arg1   first_argument_type;</span><br><span class="line">	<span class="keyword">typedef</span> Arg2   second_argument_type;</span><br><span class="line">	<span class="keyword">typedef</span> Result result_type;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>Both of these templates are specifically intended to be instantiated as base classes (in order to inject those standardized <code>typedef</code> names into derived classes) and yet do not provide <code>virtual</code> destructors because they are not intended to be used for polymorphic deletion. That is, code like the following is not merely unsanctioned but downright illegal, and it’s reasonable for you to assume that such code will never exist:</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// Example 4: Illegal code that you can assume</span></span><br><span class="line"><span class="comment">// will never exist.</span></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">f</span><span class="params">( std::unary_function* f )</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	<span class="keyword">delete</span> f; <span class="comment">// error, illegal</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Note that the standard tut-tuts and declares Example 4 to fall squarely into the Undefined Behavior Pit, but the standard doesn’t actually require a compiler to prevent you or anyone else from writing that code (more’s the pity). It would be easy and nice - and it wouldn’t break any standards-conforming C++ programs that exist today - to give <code>std::unary_function</code> (and other classes like it) an empty but protected destructor, in which case a compiler would actually be required to diagnose the error and toss it back in the offender’s face. Maybe we’ll see such a change in a future revision to the standard, maybe we won’t, but it would be nice to make compilers reject such code instead of just making tut-tut noises in standardish legalese.</p>
+<p>Finally, what if a base class is concrete (can be instantiated on its own) but also wants to support polymorphic destruction? Doesn’t it need a <code>public</code> destructor then, since otherwise you can’t easily create objects of that type? That’s possible, but only if you’ve already violated another guideline, to wit: <em>Don’t derive from concrete classes</em>. Or, as Scott Meyers puts it in Item 33 of More Effective C++,[8] “Make non-leaf classes abstract.” (Admittedly, it can happen in practice - in code written by someone else, of course, not by you! - and in this one case you may have to have a <code>public</code> <code>virtual</code> destructor just to accommodate what’s already a poor design. Better to refactor and fix the design, though, if you can.)</p>
+<p>In brief, then, you’re left with one of two situations. Either: a) you want to allow polymorphic deletion through a base pointer, in which case the destructor must be virtual and public; or b) you don’t, in which case the destructor should be nonvirtual and protected, the latter to prevent the unwanted usage.</p>
+<h1 id="Summary"><a href="#Summary" class="headerlink" title="Summary"></a>Summary</h1><p>In summary, prefer to make base class <code>virtual</code> functions <code>private</code> (or protected if you really must). This separates the concerns of interface and implementation, which stabilizes interfaces and makes implementation decisions easier to change and refactor later. For normal base class functions:</p>
+<ul>
+<li>Guideline #1: Prefer to make interfaces nonvirtual, using Template Method.</li>
+<li>Guideline #2: Prefer to make <code>virtual</code> functions private.</li>
+<li>Guideline #3: Only if derived classes need to invoke the base implementation of a <code>virtual</code> function, make the <code>virtual</code> function protected.</li>
+</ul>
+<p>For the special case of the destructor only:</p>
+<ul>
+<li>Guideline #4: A base class destructor should be either <code>public</code> and <code>virtual</code>, or protected and nonvirtual.</li>
+</ul>
+<p>True, the standard library itself does not always follow these design criteria. In part, that’s a reflection of how we as a community have learned over the years.</p>
+<h1 id="Notes"><a href="#Notes" class="headerlink" title="Notes"></a>Notes</h1><p>[1] H. Sutter. <em>More Exceptional C++ (Addison-Wesley, 2002)</em>.</p>
+<p>[2] Gamma, Helm, Johnson, and Vlissides. <em>Design Patterns: Elements of Reusable Object-Oriented Software (Addison-Wesley, 1995)</em>.</p>
+<p>[3] B. Liskov. <em>“Data Abstraction and Hierarchy” (SIGPLAN Notices, 23(5), May 1988)</em>.</p>
+<p>[4] H. Sutter. <em>Exceptional C++ (Addison-Wesley, 2000)</em>.</p>
+<p>[5] J. Hyslop and H. Sutter. <em>“Virtually Yours” (C/C++ Users Journal Experts Forum, 18(12), December 2000)</em>.</p>
+<p>[6] J. Coplien. <em>Advanced C++ Programming Styles and Idioms (Addison-Wesley, 1992)</em>.</p>
+<p>[7] ISO/IEC 14882:1998(E), Programming Languages - C++ (ISO and ANSI C++ standard).</p>
+<p>[8] S. Meyers. <em>More Effective C++ (Addison-Wesley, 1996)</em>.</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="https://humphrycc.github.io/2021/04/19/Virtuality/" data-id="cknzlw0ln000lgsos5fwr7kti" data-title="Virtuality" class="article-share-link">Share</a>
+      
+      
+      
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+
+    </footer>
+  </div>
+  
+    
+<nav id="article-nav">
+  
+    <a href="/2021/04/27/Do-we-need-User-defined-literal/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Newer</strong>
+      <div class="article-nav-title">
+        
+          Do we need User-defined literal?
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2021/04/19/When-to-use-virtual-destructors/" id="article-nav-older" class="article-nav-link-wrap">
+      <strong class="article-nav-caption">Older</strong>
+      <div class="article-nav-title">When to use virtual destructors?</div>
+    </a>
+  
+</nav>
+
+  
+</article>
+
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tags</h3>
+    <div class="widget">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/c/" rel="tag">c++</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Tag Cloud</h3>
+    <div class="widget tagcloud">
+      <a href="/tags/c/" style="font-size: 10px;">c++</a>
+    </div>
+  </div>
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/04/">April 2021</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2021/04/27/Do-we-need-User-defined-literal/">Do we need User-defined literal?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/Virtuality/">Virtuality</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/When-to-use-virtual-destructors/">When to use virtual destructors?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/What-is-the-use-of-having-destructor-as-private/">What is the use of having destructor as private?</a>
+          </li>
+        
+          <li>
+            <a href="/2021/04/19/What-uses-are-there-for-placement-new/">What uses are there for &#34;placement new&#34;?</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      
+      &copy; 2021 John Doe<br>
+      Powered by <a href="https://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+
+<script src="/js/jquery-3.4.1.min.js"></script>
+
+
+
+  
+<script src="/fancybox/jquery.fancybox.min.js"></script>
+
+
+
+
+<script src="/js/script.js"></script>
+
+
+
+
+
+  </div>
+</body>
+</html>
